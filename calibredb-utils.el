@@ -341,7 +341,7 @@ types are added.
 Optional argument OPTION is additional options."
   (interactive)
   (calibredb-command :command "add"
-                     :input (format "--add %s" (concat (file-name-as-directory (calibredb-complete-directory-quote "Add a directory to Calibre")) "*"))
+                     :input (format "-r %s -m overwrite" (concat (file-name-as-directory (calibredb-complete-directory-quote "Add a directory to Calibre"))))
                      :option (or option "")
                      :library (format "--library-path %s" (calibredb-root-dir-quote)))
   (if (equal major-mode 'calibredb-search-mode)
@@ -962,7 +962,7 @@ Argument TYPE ebook type."
                                                   (if (yes-or-no-p "Found kindle, do you want to convert and export to kindle?")
                                                       calibredb-device-dir
                                                     (read-file-name "Convert and export to (select a directory): "))
-                                                (read-file-name "Convert and export to (select a directory): ")))))
+                                                (read-file-name "Convert and export to (select a directory): " (file-name-directory (calibredb-getattr (car (calibredb-find-candidate-at-point)) :file-path)))))))
       (set-process-sentinel
        (calibredb-convert-process
         :input (shell-quote-argument (expand-file-name file))
