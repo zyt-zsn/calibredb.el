@@ -71,16 +71,25 @@ If prefix ARG is non-nil, keep the files after adding without prompt."
                                    :library (if calibredb-add-duplicate
                                                 (format "--library-path %s -d" (calibredb-root-dir-quote))
                                               (format "--library-path %s" (calibredb-root-dir-quote))))))
-    (if (s-contains? "Added book ids" output)
-        (cond ((string= calibredb-add-delete-original-file "yes")
+    ;; (if (s-contains? "已添加的书籍的id" output)
+	(if (string-match "\\\(已添加的书籍的id:\\\|Added book ids\\\) *\\([[:digit:]]+\\\)" output)
+		(prog1
+			(match-string 2 output)
+	        (cond ((string= calibredb-add-delete-original-file "yes")
                (if arg (message "Adding files succeeded, files were kept.")
                  (calibredb-move-to-trash file)))
               ((string= calibredb-add-delete-original-file "no"))
               (t (unless arg
                    (if (yes-or-no-p
                         (concat "File has been copied to database. Subsequently delete original file? " file))
-                       (calibredb-move-to-trash file)))))
-      (message "Adding book failed, please add it manually."))))
+                       (calibredb-move-to-trash file))))))
+	  ;(if (s-contains? "下列书籍已经存在于数据库" output)
+	  (if (string-match "下列书籍已经存在于数据库，未被添加.*\n\\\(.*\\\)" output)
+		  (string-trim-whitespace (match-string 1 output))
+		  (message "Adding book failed, please add it manually.")
+	  nil
+		)
+	  )))
 
 (defun calibredb-move-to-trash (file)
   "Move the FILE to trash."
