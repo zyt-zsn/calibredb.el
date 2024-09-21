@@ -473,7 +473,13 @@ OR author_sort LIKE '%%%s%%'
                             ,(calibredb-struct-library command-string)) " ")))
     (setq-local inhibit-message t)
     (message "%s" line)
-    (message "%s" (shell-command-to-string line))))
+	(let (
+		  (coding-system-for-read 'utf-8)
+		  (coding-system-for-write 'chinese-gb18030-unix)
+		  )
+      (message "%s" (shell-command-to-string line))
+	  )
+	))
 
 (cl-defun calibredb-process (&key command option input id library action)
   (let* ((command-string (make-calibredb-struct
