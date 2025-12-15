@@ -42,6 +42,7 @@
   :man-page "calibredb"
   ["File operation"
    [("a" "Add a file"   calibredb-add)
+    ("f" "Add format to selected item"   calibredb-add-format)
     ("A" "Add a directory"   calibredb-add-dir)
     ("d" "Remove a file"   calibredb-remove)
     ("e" "Export" calibredb-export-dispatch)
